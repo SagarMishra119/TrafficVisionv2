@@ -1,0 +1,85 @@
+project:
+  name: traffic_density_detection
+  version: "1.0.0"
+
+paths:
+  dataset: dataset/
+  models: models/weights/
+  exports: models/exports/
+  reports: reports/
+  plots: reports/plots/
+
+dataset:
+  name: UA-DETRAC
+  yaml: configs/dataset.yaml
+  image_size: 640
+  train_split: 0.7
+  valid_split: 0.2
+  test_split: 0.1
+
+classes:
+  - car
+  - bus
+  - truck
+  - motorcycle
+  - bicycle
+
+training:
+  model_nano: yolov8n.pt
+  model_small: yolov8s.pt
+  model_v11_nano: yolo11n.pt
+  model_v11_small: yolo11s.pt
+  epochs: 10
+  batch_size: 32
+  image_size: 640
+  learning_rate: 0.01
+  weight_decay: 0.0005
+  momentum: 0.937
+  patience: 20
+  workers: 8
+  device: "cpu"
+  optimizer: SGD
+  cos_lr: true
+  amp: true
+  cache: false
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 10.0
+  translate: 0.1
+  scale: 0.5
+  shear: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.1
+
+density_thresholds:
+  low:
+    min: 0
+    max: 10
+    label: Low
+    color: "#00C853"
+  medium:
+    min: 11
+    max: 25
+    label: Medium
+    color: "#FFD600"
+  high:
+    min: 26
+    max: 999
+    label: High
+    color: "#D50000"
+
+inference:
+  confidence: 0.25
+  iou_threshold: 0.45
+  max_detections: 300
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: false
+  workers: 1
